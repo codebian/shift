@@ -63,7 +63,7 @@ pip install MDAnalysis
 
 ## How-To
 
-1 . First you need to extract all the chemical shift from MD trajectory (or PDB files). You need at least to specify a PDB directory or a topology and a dcd file (**don't forget to rename all the special residues like HS[EDP] to HIS**). Prediction from PDB files will use only one processor, so you don't have to use MPI.
+1 . First you need to extract all the chemical shift from MD trajectory (or PDB files). You need at least to specify a PDB directory or a topology and a dcd file (**don't forget to rename all the special residues like HS[EDP] to HIS in the topology file, because SHIFTX+ won't recognize them**). Prediction from PDB files will use only one processor, so you don't have to use MPI. On the contrary, to predict all the chemical shift from MD trajectories I recommand you to use MPI (knowing that SHIFTX+ is not the fastest man alive), especially if they are very long (> 100000 frames).
 ```bash
 mpiexec -np 4 python shift.py -t topology.psf -d traj.dcd
 ```
@@ -76,7 +76,7 @@ mpiexec -np 4 python shift.py -t topology.psf -d traj.dcd
 * -i/--interval: used frames at this interval (default: 1)
 * -s/--shift: shift the resid number to match with Xray or experimental data (default: 0)
 
-2 . And finally, compare them to experimental data. It will compute the RMSD between the prediction and the experimental data and plot the secondary chemical shift along the sequence for each element (Ca, Cb, etc ...). Finally, if you want, you can plot the chemical shift distribution for each residue.
+2 . And finally, compare them to experimental data. It will compute the RMSD between the prediction and the experimental data and plot the secondary chemical shift along the sequence for each element (Ca, Cb, etc ...). Finally, if you want, you can plot the chemical shift distribution for each residue (long operation).
 ```bash
 python analyze.py -c obs.bmrb -h5 shiftx.hdf5 -d dssp.file
 ```
