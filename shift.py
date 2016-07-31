@@ -180,8 +180,13 @@ class Shiftx:
 
         else:
 
-            # Open trajectories!
-            u = Universe(self.top_file, self.dcd_file)
+            try:
+                # Open trajectories!
+                u = Universe(self.top_file, self.dcd_file)
+            except:
+                print 'Error: failed to load trajectory!'
+                self.comm.Abort()
+                
             total_frames = len(u.trajectory)
             used_frames = (total_frames / interval)
 
