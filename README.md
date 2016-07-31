@@ -79,7 +79,7 @@ mpiexec -np 4 python shift.py -t topology.psf -d traj.dcd # With MPI using 4 cor
 * -i/--interval: used frames at this interval (default: 1)
 * -s/--shift: shift the resid number to match with Xray or experimental data (default: 0)
 
-2 . And finally, compare them to experimental data. It will compute the RMSD between the prediction and the experimental data and plot the secondary chemical shift along the sequence for each element (Ca, Cb, etc ...). Finally, if you want, you can plot the chemical shift distribution for each residue (long operation). But now, that you have the HDF5 file with the data, you can  play with it and run whatever analysis you want ...
+2 . And finally, compare them to experimental data. It will compute the RMSD between the prediction and the experimental data and plot the secondary chemical shift along the sequence for each element (Ca, Cb, etc ...). Finally, if you want, you can plot the chemical shift distribution for each residue (long operation)(see citation). But now, that you have the HDF5 file with the data, you can  play with it and run whatever analysis you want ...
 ```bash
 python analyze.py -c obs.bmrb -h5 shiftx.hdf5 -d dssp.file
 ```
@@ -114,6 +114,7 @@ The BMRB file that contains all the experimental chemical shift values must be l
 
 ## Citation
 1. Beomsoo Han, Yifeng Liu, Simon Ginzinger, and David Wishart. (2011) SHIFTX2: significantly improved protein chemical shift prediction. Journal of Biomolecular NMR, Volume 50, Number 1, 43-57. doi: 10.1007/s10858-011-9478-4.
+2. Robustelli, P., Stafford, K. A., & Palmer III, A. G. (2012). Interpreting protein structural dynamics from NMR chemical shifts. Journal of the American Chemical Society, 134(14), 6365-6374.
 
 
 ## License
