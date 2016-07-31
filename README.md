@@ -15,7 +15,7 @@ You need, at a minimum:
 
 And *SHIFTX2* chemical shift prediction tool (http://www.shiftx2.ca/).
 
-## Installation
+## Installation on UNIX
 
 I highly recommand you to install the Anaconda distribution (https://www.continuum.io/downloads) if you want a clean python environnment with nearly all the prerequisites already installed (NumPy, Pandas, Matplotlib, MPI).
 
@@ -60,6 +60,27 @@ python setup.py install
 ```bash
 pip install MDAnalysis
 ```
+
+## How-To
+
+1 . First you need to extract all the chemical shift from MD trajectory (or PDB files). You need at least to specify a PDB directory or a topology and a dcd file (don't forget to rename all the special residue like HS[EDP] to HIS). Prediction from PDB files will use only one processor, so you don't have to use MPI.
+```bash
+mpiexec -np 4 python shift.py -t topology.psf -d traj.dcd
+```
+**Command line options**
+* -p/--pdb: directory with pdb files
+* -t/--top: topology file (pdb, psf). Don't forget to rename HS[EDP] to HIS
+* -d/--dcd: single trajectory of list of trajectories (dcd, xtc)
+* --pH: pH (default: 7.4)
+* --temperature: temperature (default: 7.4)
+* -i/--interval: used frames at this interval (default: 1)
+* -s/--shift: shift the resid number to match with Xray or experimental data (default: 0)
+
+2. And finally, compare them to experimental data
+```bash
+python analyze.py -c obs.bmrb -h5 shiftx.hdf5 -d dssp.file
+```
+
 
 ## Citation
 1. Beomsoo Han, Yifeng Liu, Simon Ginzinger, and David Wishart. (2011) SHIFTX2: significantly improved protein chemical shift prediction. Journal of Biomolecular NMR, Volume 50, Number 1, 43-57. doi: 10.1007/s10858-011-9478-4.
