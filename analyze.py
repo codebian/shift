@@ -284,7 +284,7 @@ def plot_shift_diff(cs, dssp_file=None):
         ax.set_xlim(np.min(tmp['resid'] - 1), np.max(tmp['resid']) + 1)
 
         ax.set_xlabel('Residue', fontsize=20)
-        ax.set_ylabel(r'$\delta %s$ |$\delta_{pred}-\delta_{exp}$| (ppm)' % ylabel, fontsize=20)
+        ax.set_ylabel(r'$\delta %s$ |$\delta_{\mathrm{MD}}-\delta_{\mathrm{exp}}$| (ppm)' % ylabel, fontsize=20)
 
         fig_name = "diff_shift_%s.png" % (atom_type)
         fig.savefig(fig_name, dpi=300, format='png', bbox_inches='tight')
