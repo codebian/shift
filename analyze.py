@@ -101,7 +101,7 @@ def plot_dssp_info(ax, resid, min_data, max_data, dssp_file, baseline=None):
     ax.broken_barh(extract_dssp_info(dssp_file, 'E'), (y_box, y_len), facecolors='Gold', zorder=3)
     ax.plot(resid, len(resid)*[y_bar], color='black', zorder=1, lw=0.5)
 
-def plot_shift(cs, dssp_file):
+def plot_shift(cs, dssp_file=None):
 
     color = 'dodgerblue'
     atom_types = cs['atom_type'].unique()
@@ -134,7 +134,8 @@ def plot_shift(cs, dssp_file):
         ymax = np.max(np.abs(tmp['dobs'])) * 1.5
         ymin = -ymax
 
-        plot_dssp_info(ax, tmp['resid'], ymin / 1.5, ymax, dssp_file)
+        if dssp_file:
+            plot_dssp_info(ax, tmp['resid'], ymin / 1.5, ymax, dssp_file)
 
         ax.set_xlabel("Residue", fontsize=20)
         ax.set_ylabel(r"$\Delta\delta %s$ (ppm)" % ylabel, fontsize=20)
