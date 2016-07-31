@@ -63,7 +63,7 @@ pip install MDAnalysis
 
 ## How-To
 
-1 . First you need to extract all the chemical shift from MD trajectory (or PDB files). You need at least to specify a PDB directory or a topology and a dcd file (**don't forget to rename all the special residues like HS[EDP] to HIS in the topology file, because SHIFTX+ won't recognize them**). Prediction from PDB files will use only one processor, so you don't have to use MPI. On the contrary, to predict all the chemical shift from MD trajectories I recommand you to use MPI (knowing that SHIFTX+ is not the fastest man alive), especially if they are very long (> 100000 frames).
+1 . First you need to extract all the chemical shift from MD trajectory (or PDB files). You need at least to specify a directory with some PDB files or a topology and a dcd file (**don't forget to rename all the special residues like HS[EDP] to HIS in the topology file, because SHIFTX+ won't recognize them**). Prediction from PDB files will use only one processor, so you don't have to use MPI. On the contrary, to predict all the chemical shift from MD trajectories I recommand you to use MPI (knowing that SHIFTX+ is not the fastest man alive), especially if they are very long (> 100000 frames).
 ```bash
 python shift.py -p pdb_directory # With a single core
 ```
