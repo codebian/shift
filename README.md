@@ -89,6 +89,29 @@ python analyze.py -c obs.bmrb -h5 shiftx.hdf5 -d dssp.file
 * -d/-dssp: DSSP file to plot secondary structure on the plot (Default: None)
 * --distribution: if you wan to plot the chemical shift distribution for each residue (default: False)
 
+## BMRB file format
+
+The BMRB file that contains all the experimental chemical shift values must be like that.
+
+```
+        1 225 SER CA C  58.40 0.0  1
+        2 225 SER C  C 174.90 0.0  1
+        3 226 ALA H  H   8.31 0.0  1
+        4 226 ALA N  N 126.10 0.0  1
+        5 226 ALA CA C  53.50 0.0  1
+        6 226 ALA CB C  18.20 0.0  1
+        7 226 ALA C  C 178.40 0.0  1
+        8 227 ASN H  H   8.26 0.0  1
+        9 227 ASN N  N 117.00 0.0  1
+       10 227 ASN CA C  54.00 0.0  1
+       11 227 ASN CB C  38.30 0.0  1
+       12 227 ASN C  C 175.90 0.0  1
+       13 228 GLU H  H   7.95 0.0  1
+       14 228 GLU N  N 119.20 0.0  1
+       15 228 GLU CA C  57.10 0.0  1
+       16 228 GLU C  C 177.00 0.0  1
+```
+
 ## Citation
 1. Beomsoo Han, Yifeng Liu, Simon Ginzinger, and David Wishart. (2011) SHIFTX2: significantly improved protein chemical shift prediction. Journal of Biomolecular NMR, Volume 50, Number 1, 43-57. doi: 10.1007/s10858-011-9478-4.
 
