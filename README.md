@@ -63,24 +63,28 @@ pip install MDAnalysis
 
 ## How-To
 
-1 . First you need to extract all the chemical shift from MD trajectory (or PDB files). You need at least to specify a PDB directory or a topology and a dcd file (don't forget to rename all the special residue like HS[EDP] to HIS). Prediction from PDB files will use only one processor, so you don't have to use MPI.
+1 . First you need to extract all the chemical shift from MD trajectory (or PDB files). You need at least to specify a PDB directory or a topology and a dcd file (**don't forget to rename all the special residues like HS[EDP] to HIS**). Prediction from PDB files will use only one processor, so you don't have to use MPI.
 ```bash
 mpiexec -np 4 python shift.py -t topology.psf -d traj.dcd
 ```
 **Command line options**
 * -p/--pdb: directory with pdb files
-* -t/--top: topology file (pdb, psf). Don't forget to rename HS[EDP] to HIS
+* -t/--top: topology file (pdb, psf)
 * -d/--dcd: single trajectory of list of trajectories (dcd, xtc)
 * --pH: pH (default: 7.4)
 * --temperature: temperature (default: 7.4)
 * -i/--interval: used frames at this interval (default: 1)
 * -s/--shift: shift the resid number to match with Xray or experimental data (default: 0)
 
-2. And finally, compare them to experimental data
+2 . And finally, compare them to experimental data. It will compute the RMSD between the prediction and the experimental data and plot the secondary chemical shift along the sequence for each element (Ca, Cb, etc ...). Finally, if you want, you can plot the chemical shift distribution for each residue.
 ```bash
 python analyze.py -c obs.bmrb -h5 shiftx.hdf5 -d dssp.file
 ```
-
+**Command line options**
+* -c/--obs: BMRB file with experimental chemical shift
+* -h5: HDF5 file with the chemical shift
+* -d/-dssp: DSSP file to plot secondary structure on the plot (Default: None)
+* --distribution: if you wan to plot the chemical shift distribution for each residue (default: False)
 
 ## Citation
 1. Beomsoo Han, Yifeng Liu, Simon Ginzinger, and David Wishart. (2011) SHIFTX2: significantly improved protein chemical shift prediction. Journal of Biomolecular NMR, Volume 50, Number 1, 43-57. doi: 10.1007/s10858-011-9478-4.
