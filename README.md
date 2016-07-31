@@ -79,7 +79,7 @@ mpiexec -np 4 python shift.py -t topology.psf -d traj.dcd # With MPI using 4 cor
 * -i/--interval: used frames at this interval (default: 1)
 * -s/--shift: shift the resid number to match with Xray or experimental data (default: 0)
 
-2 . And finally, compare them to experimental data. It will compute the RMSD between the prediction and the experimental data and plot the secondary chemical shift along the sequence for each element (Ca, Cb, etc ...). Finally, if you want, you can plot the chemical shift distribution for each residue (long operation).
+2 . And finally, compare them to experimental data. It will compute the RMSD between the prediction and the experimental data and plot the secondary chemical shift along the sequence for each element (Ca, Cb, etc ...). Finally, if you want, you can plot the chemical shift distribution for each residue (long operation). But now, that you have the HDF5 file with the data, you can  play with it and run whatever analysis you want ...
 ```bash
 python analyze.py -c obs.bmrb -h5 shiftx.hdf5 -d dssp.file
 ```
