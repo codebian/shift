@@ -251,6 +251,46 @@ def plot_distribution(cs, hdf_file):
 
             plt.close(figB)
 
+def plot_shift_diff(cs, dssp_file=None):
+
+    color = 'dodgerblue'
+    atom_types = cs['atom_type'].unique()
+    label = {'CA': 'C_{\\alpha}', 'CB': 'C_{\\beta}'}
+
+    for atom_type in atom_types:
+
+        if label.has_key(atom_type):
+            ylabel = label[atom_type]
+        else:
+            ylabel = atom_type
+
+        tmp = cs.loc[cs['atom_type'] == atom_type]
+
+        diff = np.abs(tmp['obs'] - tmp['pred'])
+
+        std_neg = diff - tmp['std']
+        std_neg[std_neg < 0.] = 0.
+        std_pos = diff + tmp['std']
+
+        fig, ax = plt.subplots(figsize=(12,4))
+
+        ax.plot(tmp['resid'], diff, color=color)
+        ax.fill_between(tmp['resid'], std_neg, std_pos, color=color, alpha=0.4)
+
+        if dssp_file:
+            plot_dssp_info(ax, tmp['resid'], 0, 10., dssp_file)
+
+        ax.set_ylim(-1, 10.)
+        ax.set_xlim(np.min(tmp['resid'] - 1), np.max(tmp['resid']) + 1)
+
+        ax.set_xlabel('Residue', fontsize=20)
+        ax.set_ylabel(r'$\delta %s$ |$\delta_{pred}-\delta_{exp}$| (ppm)' % ylabel, fontsize=20)
+
+        fig_name = "diff_shift_%s.png" % (atom_type)
+        fig.savefig(fig_name, dpi=300, format='png', bbox_inches='tight')
+
+        plt.close(fig)
+
 def main():
     parser = argparse.ArgumentParser(description='Analyze NMR chemical shift')
     parser.add_argument('-c', "--obs", dest='obsfile', required = True, \
@@ -304,6 +344,7 @@ def main():
     # Save and plot data
     cs.to_csv('shift_resume.csv', index=False, na_rep='NaN')
     plot_shift(cs, dssp_file)
+    plot_shift_diff(cs, dssp_file)
 
     if distribution:
         plot_distribution(cs, hdf_file)
