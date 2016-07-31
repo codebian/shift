@@ -19,26 +19,25 @@ And *SHIFTX2* chemical shift prediction tool (http://www.shiftx2.ca/).
 
 I highly recommand you to install the Anaconda distribution (https://www.continuum.io/downloads) if you want a clean python environnment with nearly all the prerequisites already installed (NumPy, Pandas, Matplotlib, MPI).
 
-For the rest (nearly), you just have to do this.
-```bash
-conda install mpi4py
-pip install MDAnalysis
-```
-
 In order to use hdf5 format with MPI, you need a special version compiled in parallel mode (with mpi4py).
 
-1 . First, remove hdf5 and h5py from Anaconda
+1 . First, you need to install mpi4py
+```bash
+conda install mpi4py
+```
+
+2 . Now, remove hdf5 and h5py from Anaconda (trust me)
 ```bash
 conda remove hdf5 h5py
 ```
 
-2 . After, download the latest version of hdf5 and h5py
+3 . After, download the latest version of hdf5 and h5py
 ```bash
-wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.17.tar
+wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.17.tar # check if it is the latest version
 git clone https://github.com/h5py/h5py.git
 ```
 
-3 . Compilation of HDF5
+4 . Compilation of HDF5
 ```bash
 tar -xvf hdf5-1.8.17.tar
 cd hdf5-1.8.17
@@ -48,7 +47,7 @@ make
 make install
 ```
 
-4 . Installation of h5py
+5 . Installation of h5py
 ```bash
 cd ../h5py
 export CC=mpicc
@@ -57,6 +56,10 @@ python setup.py build
 python setup.py install
 ```
 
+6 . For the rest, you just have to do this
+```bash
+pip install MDAnalysis
+```
 
 ## Citation
 1. Beomsoo Han, Yifeng Liu, Simon Ginzinger, and David Wishart. (2011) SHIFTX2: significantly improved protein chemical shift prediction. Journal of Biomolecular NMR, Volume 50, Number 1, 43-57. doi: 10.1007/s10858-011-9478-4.
