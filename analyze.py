@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+""" Simple analyze by computing RMSD and ploting predicted vs experimental chemical shift """
+
 import os
 import re
 import sys
