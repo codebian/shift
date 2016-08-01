@@ -86,7 +86,8 @@ python analyze.py -c obs.bmrb -h5 shiftx.hdf5 -d dssp.file
 **Command line options**
 * -c/--obs: BMRB file with experimental chemical shift
 * -h5: HDF5 file with the chemical shift
-* -d/-dssp: DSSP file to plot secondary structure on the plot (Default: None)
+* -d/--dssp: DSSP file to plot secondary structure on the plot (Default: None)
+* -p/--pdb: pdb file used to put data in bfactors column
 * --distribution: if you want to plot the chemical shift distribution for each residue (default: False)
 
 ## BMRB file format
