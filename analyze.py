@@ -266,15 +266,13 @@ def plot_shift_diff(cs, dssp_file=None):
 
         tmp = cs.loc[cs['atom_type'] == atom_type]
 
-        diff = np.abs(tmp['obs'] - tmp['pred'])
-
-        std_neg = diff - tmp['std']
+        std_neg = tmp['diff'] - tmp['std']
         std_neg[std_neg < 0.] = 0.
-        std_pos = diff + tmp['std']
+        std_pos = tmp['diff'] + tmp['std']
 
         fig, ax = plt.subplots(figsize=(12,4))
 
-        ax.plot(tmp['resid'], diff, color=color)
+        ax.plot(tmp['resid'], tmp['diff'], color=color)
         ax.fill_between(tmp['resid'], std_neg, std_pos, color=color, alpha=0.4)
 
         if dssp_file:
@@ -284,12 +282,44 @@ def plot_shift_diff(cs, dssp_file=None):
         ax.set_xlim(np.min(tmp['resid'] - 1), np.max(tmp['resid']) + 1)
 
         ax.set_xlabel('Residue', fontsize=20)
-        ax.set_ylabel(r'$\delta %s$ |$\delta_{\mathrm{MD}}-\delta_{\mathrm{exp}}$| (ppm)' % ylabel, fontsize=20)
+        ax.set_ylabel(r'$\delta %s$ |$\delta_{\mathrm{pred}}-\delta_{\mathrm{exp}}$| (ppm)' % ylabel, fontsize=20)
 
         fig_name = "diff_shift_%s.png" % (atom_type)
         fig.savefig(fig_name, dpi=300, format='png', bbox_inches='tight')
 
         plt.close(fig)
+
+def replace_bfactors(cs, column, pdb_file, filename):
+
+    atom_types = cs['atom_type'].unique()
+
+    for atom_type in atom_types:
+
+        new_pdb_file = '%s_%s.pdb' % (filename, atom_type)
+        tmp = cs.loc[cs['atom_type'] == atom_type]
+
+        with open(pdb_file, 'r') as f, open(new_pdb_file, 'w') as w:
+            for line in f:
+
+                if re.search('^ATOM', line):
+                    resid = int(line[22:26])
+                    
+                    row = tmp.loc[(tmp['resid'] == resid) & (tmp['atom_type'] == atom_type)]
+
+                    try:
+                        value = row[column].values[0]
+
+                        if np.isnan(value):
+                            value = -1
+
+                    except:
+                        value = -1
+
+                    line = line[0:60] + '%6.2f' % value + line[66:-1]
+                    w.write('%s\n' % line) 
+
+                else:
+                    w.write(line)
 
 def main():
     parser = argparse.ArgumentParser(description='Analyze NMR chemical shift')
@@ -305,6 +335,9 @@ def main():
     parser.add_argument("--distribution", dest='distribution', \
                         action = "store_true", default = False, \
                         help = "if we want to plot all the distribution")
+    parser.add_argument("-p", '--pdb', dest='pdb_file', \
+                        action = "store", default = None, \
+                        help = "pdb file (bfactors replaced by shift diff)")
 
     options = parser.parse_args()
     
@@ -312,6 +345,7 @@ def main():
     hdf_file = options.h5file
     dssp_file = options.dsspfile
     distribution = options.distribution
+    pdb_file = options.pdb_file
 
     try:
         shiftx2_dir = os.environ['SHIFTX2_DIR']
@@ -335,6 +369,8 @@ def main():
     # Get Delta_delta chemical shift
     cs['dobs'] = cs['obs'] - cs['rc']
     cs['dpred'] = cs['pred'] - cs['rc']
+    # Get diff between pred and obs
+    cs['diff'] = np.abs(cs['pred'] - cs['obs'])
 
     # Compute RMSD between obs and pred for each atom type
     for atom_type in cs['atom_type'].unique():
@@ -345,6 +381,9 @@ def main():
     cs.to_csv('shift_resume.csv', index=False, na_rep='NaN')
     plot_shift(cs, dssp_file)
     plot_shift_diff(cs, dssp_file)
+
+    if pdb_file:
+        replace_bfactors(cs, 'diff', pdb_file, 'diff_shift')
 
     if distribution:
         plot_distribution(cs, hdf_file)
