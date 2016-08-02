@@ -105,7 +105,7 @@ def plot_dssp_info(ax, resid, min_data, max_data, dssp_file, baseline=None):
 
 def plot_shift(cs, dssp_file=None):
 
-    color = 'dodgerblue'
+    color = 'chocolate'
     atom_types = cs['atom_type'].unique()
 
     xmin = cs['resid'].min()
@@ -150,7 +150,7 @@ def plot_shift(cs, dssp_file=None):
 
 def plot_distribution(cs, hdf_file):
 
-    color = 'dodgerblue'
+    color = 'chocolate'
     atom_types = cs['atom_type'].unique()
 
     with h5py.File(hdf_file, 'r') as f:
@@ -253,7 +253,7 @@ def plot_distribution(cs, hdf_file):
 
 def plot_shift_diff(cs, dssp_file=None):
 
-    color = 'dodgerblue'
+    color = 'chocolate'
     atom_types = cs['atom_type'].unique()
     label = {'CA': 'C_{\\alpha}', 'CB': 'C_{\\beta}'}
 
@@ -289,7 +289,7 @@ def plot_shift_diff(cs, dssp_file=None):
 
         plt.close(fig)
 
-def replace_bfactors(cs, column, pdb_file, filename):
+def replace_bfactors(cs, column, pdb_file, filename='new_pdb', na_value=-1):
 
     atom_types = cs['atom_type'].unique()
 
@@ -310,10 +310,10 @@ def replace_bfactors(cs, column, pdb_file, filename):
                         value = row[column].values[0]
 
                         if np.isnan(value):
-                            value = -1
+                            value = na_value
 
                     except:
-                        value = -1
+                        value = na_value
 
                     line = line[0:60] + '%6.2f' % value + line[66:-1]
                     w.write('%s\n' % line) 
@@ -383,7 +383,7 @@ def main():
     plot_shift_diff(cs, dssp_file)
 
     if pdb_file:
-        replace_bfactors(cs, 'diff', pdb_file, 'diff_shift')
+        replace_bfactors(cs, 'diff', pdb_file, 'diff_shift', na_value=-1)
 
     if distribution:
         plot_distribution(cs, hdf_file)
