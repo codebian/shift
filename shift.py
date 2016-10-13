@@ -255,11 +255,6 @@ class Shiftx:
 
 def parse_options():
 
-    # Define MPI environnment
-    comm = MPI.COMM_WORLD
-    rank = comm.Get_rank()
-    size = comm.Get_size()
-
     parser = argparse.ArgumentParser(description = 'Run SHIFTX+ with MPI')
     parser.add_argument('-p', "--pdb", dest='pdb_dir',
                         action="store", type=str,
