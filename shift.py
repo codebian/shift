@@ -20,9 +20,8 @@ import pandas as pd
 from mpi4py import MPI
 from MDAnalysis import Universe
 
-__author__ = "Jérôme Eberhardt, Roland H Stote, and Annick Dejaegere"
+__author__ = "Jérôme Eberhardt"
 __copyright__ = "Copyright 2016, Jérôme Eberhardt"
-__credits__ = ["Jérôme Eberhardt", "Roland H Stote", "Annick Dejaegere"]
 
 __lience__ = "MIT"
 __maintainer__ = "Jérôme Eberhardt"
