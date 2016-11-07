@@ -32,7 +32,7 @@ def get_random_coil(rc_file):
     rc['resn'] = rc['resn'].apply(seq3).str.upper()
     return rc
 
-def get_pred(hdf_file, atom_types):
+def get_pred(hdf_file, atom_types, start=0, stop=-1):
     columns = ['resid', 'resn', 'atom_type', 'pred', 'std']
     df = pd.DataFrame(np.nan, index=[0], columns=columns)
 
@@ -48,7 +48,11 @@ def get_pred(hdf_file, atom_types):
 
                 try:
                     nset = '%s_%s/%s' % (resid, resn, atom_type)
-                    dset = f[nset]
+
+                    if stop == -1:
+                        dset = f[nset][start:]
+                    else:
+                        dset = f[nset][start:stop]
 
                     df.loc[i] = [resid, resn, atom_type, np.nanmean(dset), np.nanstd(dset)]
 
@@ -338,6 +342,12 @@ def main():
     parser.add_argument("-p", '--pdb', dest='pdb_file', \
                         action = "store", default = None, \
                         help = "pdb file (bfactors replaced by shift diff)")
+    parser.add_argument('--start', dest="start", default=0,
+                        action="store", type=int, 
+                        help='number of the first frame (0 based)')
+    parser.add_argument('--stop', dest="stop", default=-1,
+                        action="store", type=int, 
+                        help='number of the last frame (excluded)')
 
     options = parser.parse_args()
     
@@ -346,6 +356,8 @@ def main():
     dssp_file = options.dsspfile
     distribution = options.distribution
     pdb_file = options.pdb_file
+    start = options.start
+    stop = options.stop
 
     try:
         shiftx2_dir = os.environ['SHIFTX2_DIR']
@@ -357,7 +369,7 @@ def main():
     # Get obs and random coil
     cs_obs = get_obs(obs_file)
     # Get mean and std pred
-    cs_pred = get_pred(hdf_file, cs_obs['atom_type'].unique())
+    cs_pred = get_pred(hdf_file, cs_obs['atom_type'].unique(), start, stop)
     # Get Random coil values
     rc = get_random_coil(rc_file)
 
