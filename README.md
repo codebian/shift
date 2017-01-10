@@ -3,9 +3,9 @@ Yet another wrapper around SHIFTX+ for MD trajectories analysis but using MPI an
 
 ## Prerequisites
 
-You need, at a minimum:
+You need, at a minimum (requirements.txt):
 
-* Python 2.7
+* Python 2.7 (only for the moment)
 * NumPy
 * Pandas
 * MDAnalysis
