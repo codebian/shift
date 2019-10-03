@@ -16,7 +16,6 @@ import subprocess
 import h5py
 import numpy as np
 import pandas as pd
-
 from mpi4py import MPI
 from MDAnalysis import Universe
 
@@ -31,7 +30,6 @@ __email__ = "qksoneo@gmail.com"
 
 class Shiftx:
     def __init__(self, pdb_dir=None, top_file=None, dcd_file=None):
-
         # Define MPI environnment
         self.comm = MPI.COMM_WORLD
         self.rank = self.comm.Get_rank()
@@ -64,7 +62,6 @@ class Shiftx:
         return os.path.join(dir, s)
 
     def get_files(self, dir, pattern):
-        
         files = fnmatch.filter(os.listdir(dir), pattern)
         #files = [os.path.abspath(self.getFname(dir, sn)) for sn in files]
         files = [self.get_fname(dir, sn) for sn in files]
@@ -75,7 +72,6 @@ class Shiftx:
         return files
 
     def get_range(self, length, interval):
-
         # Si process 0
         if self.rank == 0:
             # On genere une liste de la taille de la simulation
@@ -114,7 +110,6 @@ class Shiftx:
         return output, errors
 
     def read_sxp_files(self, sxp_files):
-
         df = None
 
         for sxp_file in sxp_files:
@@ -130,11 +125,10 @@ class Shiftx:
         return df
 
     def create_dataset(self, sxp, size, shift=0, filename='shiftx.hdf5'):
-        with h5py.File(filename, 'w', driver='mpio', comm=self.comm) as f:
+        with h5py.File(filename, 'w', driver='mpio', comm=MPI.COMM_WORLD) as f:
             for index, row in sxp.iterrows():
                 nset = '%d_%s/%s' % (row['NUM']+shift, row['RES'], row['ATOM'])
                 dset = f.create_dataset(nset, (size,), dtype=np.float32)
-
 
     def fill_dataset(self, sxp, start=0, shift=0, filename='shiftx.hdf5'):
         with h5py.File(filename, 'r+', driver='mpio', comm=self.comm) as f:
@@ -157,12 +151,9 @@ class Shiftx:
                     pass
 
     def run(self, pH=7.4, temperature=298.15, interval=1, shift=0):
-
         if self.pdb_dir:
-
             # Monoprocess for pdb extraction
             if self.rank == 0:
-
                 # Fire off shiftx2!!
                 self.run_shiftx(self.pdb_dir, pH=pH, temperature=temperature)
                 # Get list of all the cs file
@@ -178,7 +169,6 @@ class Shiftx:
                 [os.remove(f) for f in glob.glob('%s/*.sxp' % self.pdb_dir)]
 
         else:
-
             try:
                 # Open trajectories!
                 u = Universe(self.top_file, self.dcd_file)
@@ -211,16 +201,14 @@ class Shiftx:
             os.chdir(tmp_rank)
             
             for i in xrange(start, stop+interval, interval):
-
                 # Go to the frame i
                 u.trajectory[i]
                 # And extract the PDB
                 # The method zfill() pads string on the left with zeros to fill width.
-                u.atoms.write("snapshot_%s.pdb" % str(i).zfill(len(str(total_frames))))
+                u.select_atoms("protein").write("snapshot_%s.pdb" % str(i).zfill(len(str(total_frames))))
 
                 # We extract 5000 structures at a time
                 if (j % 5000) == 0 or stop == i:
-
                     # Fire off shiftx2 !!
                     self.run_shiftx('.', pH=pH, temperature=temperature)
 
@@ -253,7 +241,6 @@ class Shiftx:
                 shutil.rmtree(tmp_dir)
 
 def parse_options():
-
     parser = argparse.ArgumentParser(description = 'Run SHIFTX+ with MPI')
     parser.add_argument('-p', "--pdb", dest='pdb_dir',
                         action="store", type=str,
