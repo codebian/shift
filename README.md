@@ -59,7 +59,7 @@ python setup.py install
 
 6 . For the rest, you just have to do this
 ```bash
-pip install MDAnalysis
+conda install MDAnalysis
 ```
 
 ## How-To
