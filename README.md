@@ -26,32 +26,33 @@ In order to use hdf5 format with MPI, you need a special version compiled in par
 conda install mpi4py
 ```
 
-2 . Now, remove hdf5 and h5py from Anaconda (trust me)
+2 . Now, remove hdf5 and h5py from Anaconda (without removing the dependencies).
 ```bash
-conda remove hdf5 h5py
+conda remove hdf5 h5py --force
 ```
 
 3 . After, download the latest version of hdf5 and h5py
 ```bash
-wget http://www.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.8.17.tar # check if it is the latest version
-git clone https://github.com/h5py/h5py.git
+wget https://support.hdfgroup.org/ftp/HDF5/current/src/hdf5-1.10.5.tar.gz # check if it is the latest version
+wget https://github.com/h5py/h5py/archive/2.9.0.tar.gz
 ```
 
 4 . Compilation of HDF5
 ```bash
-tar -xvf hdf5-1.8.17.tar
-cd hdf5-1.8.17
-PREFIX=~/Applications/anaconda    # You need to adapt this to your system
-./configure --prefix=$PREFIX --enable-linus-lfs --with-zlib=$PREFIX --enable-parallel --enable-shared
+tar -xvf hdf5-1.10.5.tar.gz
+cd hdf5-1.10.5
+./configure --prefix=$CONDA_PREFIX --enable-linus-lfs --with-zlib=$CONDA_PREFIX --enable-parallel --enable-shared
 make
 make install
 ```
 
 5 . Installation of h5py
 ```bash
-cd ../h5py
+cd ..
+tar -xvf 2.9.0.tar.gz
+cd ../h5py-2.9.0
 export CC=mpicc
-python setup.py configure --mpi --hdf5=~/Applications/anaconda # Again, you have to adapt this
+python setup.py configure --mpi --hdf5=$CONDA_PREFIX
 python setup.py build
 python setup.py install
 ```
